@@ -10,7 +10,7 @@ class FWSwitch(Switch):
 
     def permit_packet(self, dp, parser, pkt):
         if pkt is not None:
-            if pkt.src_ip == "10.0.0.1":
+            if pkt.src_ip == "10.0.0.1" and pkt.dst_ip == "10.0.0.2":
                 match = parser.OFPMatch(
                     eth_type=0x0800,
                     ipv4_src="10.0.0.1",
@@ -19,3 +19,5 @@ class FWSwitch(Switch):
                 actions = []
                 priority = 10
                 self.add_flow(dp, priority, match, actions)
+                return False
+        return True
