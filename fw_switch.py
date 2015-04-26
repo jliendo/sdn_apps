@@ -1,3 +1,5 @@
+from ryu.lib.ip import ipv4_to_bin
+
 from switch import Switch
 
 
@@ -6,10 +8,14 @@ class FWSwitch(Switch):
     def __init__(self, *args, **kwargs):
         super(FWSwitch, self).__init__(*args, **kwargs)
 
-    def permit_packet(self, pkt):
+    def permit_packet(self, dp, parser, pkt):
         if pkt is not None:
-            print "arp.src_ip: %s" % pkt.src_ip
-            print "arp.dst_ip: %s" % pkt.dst_ip
-            if pkt.src_ip == "10.0.0.1" and pkt.dst_ip == "10.0.0.2":
-                return False
-        return True
+            if pkt.src_ip == "10.0.0.1":
+                match = parser.OFPMatch(
+                    eth_type=0x0800,
+                    ipv4_src="10.0.0.1",
+                    ipv4_dst="10.0.0.2",
+                )
+                actions = []
+                priority = 10
+                self.add_flow(dp, priority, match, actions)

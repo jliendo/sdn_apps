@@ -30,8 +30,8 @@ class Switch(Hub):
         eth = pkt.get_protocol(ethernet.ethernet)
         pkt_arp = pkt.get_protocol(arp.arp)
 
-        if not self.permit_packet(pkt_arp):
-            return
+        # aplicamos politica de control acceso
+        self.permit_packet(dp, parser, pkt_arp)
 
         dst = eth.dst
         src = eth.src
