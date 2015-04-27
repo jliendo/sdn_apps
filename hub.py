@@ -1,6 +1,8 @@
 from ryu.base import app_manager
 from ryu.controller import ofp_event
-from ryu.controller.handler import HANDSHAKE_DISPATCHER, CONFIG_DISPATCHER, MAIN_DISPATCHER
+from ryu.controller.handler import HANDSHAKE_DISPATCHER
+from ryu.controller.handler import CONFIG_DISPATCHER
+from ryu.controller.handler import MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_3
 
@@ -55,7 +57,11 @@ class Hub(app_manager.RyuApp):
         ofp = dp.ofproto
         ofp_parser = dp.ofproto_parser
 
-        actions = [ofp_parser.OFPActionOutput(ofp.OFPP_FLOOD)]
+        actions = [
+            ofp_parser.OFPActionOutput(
+                ofp.OFPP_FLOOD
+            )
+        ]
         out = ofp_parser.OFPPacketOut(
             datapath=dp,
             buffer_id=msg.buffer_id,
